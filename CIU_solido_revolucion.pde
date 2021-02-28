@@ -1,4 +1,4 @@
-
+import processing.serial.*;
 boolean finish_perfil = false;
 Figure figure;
 
@@ -105,7 +105,11 @@ void draw(){
     line(width/2 ,0 , width/2, height);
     draw_current_perfil();
   } else {
-    translate(width/2, 0, -100);
+    translate(width/2, 0, -400);
+    //rotateX(random(0, 360));
+    //rotateY(random(0, 360));
+    //rotateZ(random(0, 360));
+    //delay(500);
     shape(figure.obj);
   }
 }

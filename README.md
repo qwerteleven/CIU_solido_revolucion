@@ -1,6 +1,6 @@
 # CIU_solido_revolucion
 
-![](animacion.gif)
+![](animation.gif)
 
 ```
 Autor Leopoldo lopez reveron 

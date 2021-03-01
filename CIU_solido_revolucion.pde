@@ -1,4 +1,3 @@
-import processing.serial.*;
 boolean finish_perfil = false;
 Figure figure;
 
@@ -22,15 +21,21 @@ class Point {
 }
 
 class Figure {
-  int angle = int(PI/0.1);
+  int angle = 4;
   ArrayList<Point> perfil = new ArrayList<Point>();
   Point[][] m;
   
   PShape obj;
   boolean build = false;
   
+  void reset() {
+    
+    build = false;
+    perfil = new ArrayList<Point>();
+  }
+  
   void build_figure() {
-    m = new Point[angle][perfil.size()];
+    m = new Point[360 / angle][perfil.size()];
     generate_meridians();
     Point point_A;
     Point point_B;
@@ -40,15 +45,15 @@ class Figure {
     obj.stroke(255, 0, 0);
     obj.strokeWeight(2);
     
-    for (int i = 0; i < m[0].length; i++) {
-      for (int j = 0; j < m.length; j++){ 
-        point_A = m[j][i];
-        point_B = m[j][(i + 1) % m[0].length];
+    for (int i = 0; i < m.length; i++) {
+      for (int j = 0; j < m[0].length; j++){ 
+        point_A = m[i][j];
+        point_B = m[(i + 1) % m.length][j];
         
         obj.vertex(point_A.x, point_A.y, point_A.z);
         obj.vertex(point_B.x, point_B.y, point_B.z);
       }
-        point_A = m[0][i];
+        point_A = m[i][0];
         obj.vertex(point_A.x, point_A.y, point_A.z);
     }
     
@@ -74,9 +79,9 @@ class Figure {
     for (int i = 1; i < m.length; i++) {
       for (int j = 0; j < m[i].length; j++) {
         point = m[i-1][j];
-        x_ = (point.x) * cos(angle) - point.z * sin(angle);
+        x_ = (point.x) * cos(gr_to_rd(angle)) - point.z * sin(gr_to_rd(angle));
         y_ = point.y;
-        z_ = (point.x) * sin(angle) + point.z * cos(angle);
+        z_ = (point.x) * sin(gr_to_rd(angle)) + point.z * cos(gr_to_rd(angle));
       
         m[i][j] = new Point(x_, y_, z_);
         
@@ -85,9 +90,15 @@ class Figure {
   }
   
   
-  PShape get_obj () {
+PShape get_obj () {
     return obj;
   }  
+}
+
+
+float gr_to_rd(float gr) {
+  
+  return gr * PI / 180;
 }
 
 
@@ -104,12 +115,13 @@ void draw(){
   if (!figure.build) {
     line(width/2 ,0 , width/2, height);
     draw_current_perfil();
+    textSize(24);
+    text("Click Izquierdo: Vertices del perfil \n"+
+         "Click Derecho: Finaliza, Resetea la Figura \n"+
+         "*punto de fuga, centro del lienzo", 10, 30);  
+    fill(0, 102, 153, 204);
   } else {
-    translate(width/2, 0, -400);
-    //rotateX(random(0, 360));
-    //rotateY(random(0, 360));
-    //rotateZ(random(0, 360));
-    //delay(500);
+    translate(width/2, 0, -100);
     shape(figure.obj);
   }
 }
@@ -131,6 +143,12 @@ void draw_current_perfil() {
 
 }
 
+void reset() {
+
+  finish_perfil = false;
+  figure.reset();
+}
+
 
 void mouseClicked() {
   
@@ -138,12 +156,14 @@ void mouseClicked() {
       new_point();
     }
     
-    if (mouseButton == RIGHT && !finish_perfil) {
-      finish_perfil = true;
-      Point last_point = figure.perfil.get(figure.perfil.size() - 1);
-      figure.perfil.add(new Point(width/2, last_point.y));
-      figure.build_figure();
+    if (mouseButton == RIGHT ) {
+      if (!finish_perfil && figure.perfil.size() > 0) {
+        finish_perfil = true;
+        Point last_point = figure.perfil.get(figure.perfil.size() - 1);
+        figure.perfil.add(new Point(width/2, last_point.y));
+        figure.build_figure();
+      } else {
+        reset();
+      }
     }
-    
-    
 }

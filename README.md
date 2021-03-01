@@ -43,7 +43,14 @@ Control de Estado:
   
   Las teclas de control se inspiran en la clase de presentacion de la practica
   
-  La figura se dibuja sin relleno para ver la totalidad de triangulos generados
+  La figura se dibuja sin relleno para ver la totalidad de triangulos generados y posibles 
+  estructuras interiores
+  
+  Para el inicio y finalizacion del perfil, se completa añadiendo tanto por el final como el principio
+  el punto mas cercano de la linea central divisoria
+  
+  Se permite el dibujado tanto por la derecha como por la izquierda, permitiendo de forma mas sencilla la 
+  creacion de solidos dentro de solidos
   
 
 ```
